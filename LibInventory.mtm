@@ -70,7 +70,7 @@
 }]
 
 [H: srtAmmoList = listSort(newAmmoList, "A")]
-[H: setLibProperty("ItemCategoryOptions", json.set(ItemCategoryOptions, "Ammo", srtAmmoList), getMacroLocation())]
+[H: setLibProperty("itemCategoryOptions", json.set(itemCategoryOptions, "Ammo", srtAmmoList), getMacroLocation())]
 
 [R: itemName] added to database.
 
@@ -116,7 +116,7 @@
 }]
 
 [H: srtArmorList = listSort(newArmorList, "A")]
-[H: setLibProperty("ItemCategoryOptions", json.set(ItemCategoryOptions, "Armor", srtArmorList), getMacroLocation())]
+[H: setLibProperty("itemCategoryOptions", json.set(itemCategoryOptions, "Armor", srtArmorList), getMacroLocation())]
 
 [R: itemName] added to database.
 
@@ -138,7 +138,7 @@
 }]
 
 [H: list = listSort(list,"A")]
-[H: setLibProperty("ItemCategoryOptions", json.set(getLibProperty("ItemCategoryOptions", "Lib:Inventory"),"Goods",list), "Lib:Inventory")]
+[H: setLibProperty("itemCategoryOptions", json.set(getLibProperty("itemCategoryOptions", "Lib:Inventory"),"Goods",list), "Lib:Inventory")]
 
 [R: name] added.
 
@@ -160,7 +160,7 @@
 }]
 
 [H: list = listSort(list,"A")]
-[H: ItemCategoryOptions = json.set(ItemCategoryOptions,"Special",list)]
+[H: itemCategoryOptions = json.set(itemCategoryOptions,"Special",list)]
 
 [R: name] added.
 
@@ -182,7 +182,7 @@
 }]
 
 [H: list = listSort(list,"A")]
-[H: ItemCategoryOptions = json.set(ItemCategoryOptions,"Tool",list)]
+[H: itemCategoryOptions = json.set(itemCategoryOptions,"Tool",list)]
 
 [R: name] added.
 
@@ -212,7 +212,7 @@
 }]
 
 [H: list = listSort(list,"A")]
-[H: setLibProperty("ItemCategoryOptions", json.set(getLibProperty("ItemCategoryOptions", "Lib:Inventory"),"Weapons",list), "Lib:Inventory")]
+[H: setLibProperty("itemCategoryOptions", json.set(getLibProperty("itemCategoryOptions", "Lib:Inventory"), "Weapons", list), "Lib:Inventory")]
 
 [R: itemName] added.
 
@@ -959,7 +959,7 @@ table.banded tr:nth-child(odd) {
 @PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=21 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=1 General ; tooltip= ; minWidth=140
 [H: curItems = macro.args]
 
-[H: sortItems = json.sort(curItems, "a", "itemName", "itemLocation", "itemLocationPrior")]
+[H: sortItems = json.sort(curItems, "a", "itemCategory", "itemName", "itemLocation", "itemLocationPrior")]
 
 [H: macro.return = sortItems]
 
@@ -1090,7 +1090,7 @@ table (
 @PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
 [H: pickedItem = macro.args]
 
-[H: goods=json.get(getLibProperty("ItemCategoryOptions", "Lib:inventory"), pickedItem)]
+[H: goods=json.get(getLibProperty("itemCategoryOptions", "Lib:inventory"), pickedItem)]
 
 [H: screen1=input(
   "itemToAdd|"+goods+",(Enter Manually)|Select the item to add|LIST|select=0 value=string",
@@ -1116,7 +1116,9 @@ table (
 [H: creatureSize = "Fine, Diminutive, Tiny, Small, Medium, Large, Huge, Gargantuan, Colossal"]
 
 [H: screen=input(
-  "itemName|Name|Item Name|TEXT|WIDTH=40","itemWeight|1|Weight|TEXT|WIDTH=4","itemContainer|0|Is this a container?|CHECK","itemDescription|Description|Description|TEXT|WIDTH=80"
+  "itemName|Name|Item Name|TEXT|WIDTH=40","itemWeight|1|Weight|TEXT|WIDTH = 4",
+  "itemContainer|0|Is this a container?|CHECK",
+  "itemDescription|Description|Description|TEXT|WIDTH = 80"
 )]
 [H: abort(screen)]
 
@@ -1129,14 +1131,21 @@ table (
 !!
 @@ @Add Ammo
 @PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H, macro("List Items@Lib:Inventory"): "AmmoDetails"]
+[H: passedVars = macro.args]
+[H: passedItems = json.get(macro.args, 0)]
+[H: typeOfItems = json.get(macro.args, 1)]
+
+[H, macro("List Items@Lib:Inventory"): typeOfItems]
 [H: equipList = macro.return]
-[H: equipList = json.append(equipList, "(Enter Manually - Weapon Isn't Listed)")]
-[H: itemCategoryList = "Adventuring Gear, Ammo, Armor, Clothing, Food, Lodging, Mount, Poison, Potion, Substance, Ring, Rod, Scroll, Shield, Stave, Tool, Transport, Wand, Weapon, Wondrous Item"]
-[H: itemLocationList = "Armor, Belts, Body, Carried, Chest, Eyes, Feet, Hands, Left Hand, Right Hand, Head, Headband, Neck, Ring1, Ring2, Ring3, Shield, Shoulder, Wrist"]
-[H: creatureSize = "Fine, Diminutive, Tiny, Small, Medium, Large, Huge, Gargantuan, Colossal"]
-[H: equipSpecialMaterial = "(None), Abysium, Adamantine, Alchemical Silver, Angelskin, Aszite, Blackwood, Blightburn, Blood Crystal, Bone, Bronze, Bulette, Caphorite, Cold Iron, Cryptstone, Darfleaf, Darkwood, Djezet, Dragonhide, Druchite, Eel Hide, Elysian Bronze, Fire-Forged Steel, Frost-Forged Steel, Glass, Glaucite, Gold, Greenwood, Griffon Mane, Heatstone Plating, Horacalcum, Inubrix, Irespan Basalt, Lazurite, Liquid Glass, Living Steel, Mithral, Nexavaran Steel, Noqual, Obsidian, Paueliel, Pyre Steel, Siccatite, Silversheen, Singing Steel, Spiresteel, Stone, Sunsilk, Sunsilver, Throneglass, Viridium, Voidglass, Whipwood, Wyroot"]
-[H: equipModList = "(None), Adaptive, Advancing, Allying, Ambushing, Anarchic, Anchoring, Answering, Axiomatic, Bane, Benevolent, Blocking, Blood-Hunting, Bloodsong, Brawling, Brilliant Energy, Burning, Called, Catalytic, Conductive, Confounding, Conserving, Corrosive, Corrosive Burst, Countering, Courageous, Cruel, Cunning, Dancing, Deadly, Defending, Defiant, Designating (Greater), Designating (Lesser), Dispelling, Dispelling Burst, Disruption, Distance, Distracting, Distracting (Greater), Dry Load, Dueling, Endless Ammunition, Exclusionary, Exhausting, Fate-Stealing, Flamboyant, Flamboyant (Greater), Flaming, Flaming Burst, Flying, Fortuitous, Fragile, Frost, Furious, Furyborn, Ghost Touch, Glamered, Glorious, Grapple, Grayflame, Grounding, Guardian, Heartseeker, Holy, Huntsman, Icy Burst, Igniting, Impact, Impervious, Inspired, Invigorating, Jurist, Keen, Ki Focus, Ki Intensifying, Liberating, Lifesurge, Limning, Lucky, Lucky (Greater), Menacing, Merciful, Mighty Cleaving, Mimetic, Negating, Neutralizing, Nimble Shot, Nullifying, Ominous, Peaceful, Performance, Phantom Ammunition, Phase Locking, Planar, Plummeting, Prehensile, Quenching, Reach, Reliable, Reliable (Greater), Repositioning, Returning, Sacred, Sawback, Scatter, Seaborne, Second Chance, Seeking, Shock, Shocking Burst, Silencing, Slithering, Sneaky, Speed, Spell Storing, Spellstealing, Spirit-Hunting, Stalking, Thawing, Throwing, Thrown, Thundering, Transformative, Truthful, Umbral, Unholy, Unseen, Valiant, Vampiric, Vampiric (Greater), Vicious, Virulent, Vorpal, Wounding"]
+[H: equipList = json.append(equipList, "(Enter Manually - Item Isn't Listed)")]
+[H: itemCategoryOptions = getLibProperty("itemCategoryOptions", "Lib:inventory")]
+[H: itemCategoryOptionList = json.toList(json.path.read(itemCategoryOptions, "."+passedItems))]
+[H: itemCategoryList = getLibProperty("itemCategories", "Lib:Inventory")]
+[H: itemLocationList = getLibProperty("itemLocation", "Lib:Inventory")]
+[H: creatureSize = getLibProperty("creatureSize", "Lib:Inventory")]
+[H: equipItemData = getLibProperty("itemData", "Lib:Inventory")]
+[H: equipSpecialMaterial = json.toList(json.path.read(equipItemData, ".itemMaterial"))]
+[H: equipModList = json.toList(json.path.read(equipItemData, ".weaponEnhancements"))]
 
 [H: abort(input(
    "itemToAdd|"+equipList+"|Select the item to add|LIST|SELECT = 0 VALUE = STRING DELIMITER=JSON",
@@ -1144,28 +1153,28 @@ table (
    "selModify|0|Modify item?|CHECK"
 ))]
 
-[H, if(itemToAdd == "(Enter Manually - Weapon Isn't Listed)"), code:{
-   [H, macro("Add Ammo Manually@Lib:Inventory"): ""]
+[H, if(itemToAdd == "(Enter Manually - Item Isn't Listed)"), code:{
+   [H, macro("Add "+passedItems+" Manually@Lib:Inventory"): ""]
    [H: objectToAdd = macro.return]
    [H: itemToAdd = json.get(objectToAdd, "itemName")]
 };{
    
 }]
 
-[H, if(selModify == 1  && itemToAdd != "(Enter Manually - Weapon Isn't Listed)"), code:{
-   [H: "<!-- Grab ammo database -->"]
-   [H: ammo = getLibProperty("AmmoDetails","Lib:Inventory")]
-	[H, if(json.isEmpty(ammo)): ammo = "{}"]
-   [H: "<!-- Grab from the ammo database the previously selected ammo index -->"]
-   [H: justSelItem = json.get(json.path.read(ammo, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
-   [H: selItemIndex = json.indexOf(ammo, justSelItem)]
-   [H: "<!-- Write selected ammo item into a variable -->"]
-	[H: objectToAdd = json.get(ammo, selItemIndex)]
-   [H: "<!-- Grab the selected ammo item data and put into variables -->"]
+[H, if(selModify == 1  && itemToAdd != "(Enter Manually - Item Isn't Listed)"), code:{
+   [H: "<!-- Grab item database -->"]
+   [H: selItem = getLibProperty(typeOfItems,"Lib:Inventory")]
+	[H, if(json.isEmpty(selItem)): selItem = "{}"]
+   [H: "<!-- Grab from the database the previously selected item index -->"]
+   [H: justSelItem = json.get(json.path.read(selItem, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H: selItemIndex = json.indexOf(selItem, justSelItem)]
+   [H: "<!-- Write selected item into a variable -->"]
+	[H: objectToAdd = json.get(selItem, selItemIndex)]
+   [H: "<!-- Grab the selected item data and put into variables -->"]
    [H: selItemName = json.get(objectToAdd, "itemName")]
+   [H: selItemDescription = json.get(objectToAdd, "itemDescription")]
    [H: selItemCategory = json.get(objectToAdd, "itemCategory")]
    [H: selListCategoryIndex = listFind(itemCategoryList, selItemCategory)]
-   [H: selItemDescription = json.get(objectToAdd, "itemDescription")]
    [H: selItemWeight = json.get(objectToAdd, "itemWeight")]
    [H: selItemWeightCount = json.get(objectToAdd, "itemWeightCount")]
    [H: selItemLocation = json.get(objectToAdd, "itemLocation")]
@@ -1177,11 +1186,11 @@ table (
    [H: selItemContainer = json.get(objectToAdd, "itemContainer")]
    [H: selItemCapacity = json.get(objectToAdd, "itemCapacity")]
    [H: selItemUseInfo = json.get(objectToAdd, "useInfo")]
-   [H: "<!-- Provide user with ability to modify selected ammo items data -->"]
+   [H: "<!-- Provide user with ability to modify selected items data -->"]
    [H: abort(input(
       strformat('itemName|%{selItemName}|Name of item.|TEXT|WIDTH = 50'),
-      strformat('itemCategory|%{itemCategoryList}|Category|LIST|SELECT = %{selListCategoryIndex} VALUE = STRING'), 
       strformat('itemDesc|%{selItemDescription}|Description.|TEXT|WIDTH = 50'), 
+      strformat('itemCategory|%{itemCategoryList}|Category|LIST|SELECT = %{selListCategoryIndex} VALUE = STRING'), 
       strformat('itemWeight|%{selItemWeight}|Weight.'), 
       strformat('itemWeightCount|%{selItemWeightCount}|Quantity per weight.'), 
       strformat('itemLocation|%{itemLocationList}|Location|LIST|SELECT = %{selListIndex} VALUE = STRING'), 
@@ -1189,7 +1198,7 @@ table (
       strformat('itemReference|%{selItemReference}|Reference.'), 
       strformat('itemContainer|0|Container?|CHECK'),
       strformat('itemCapacity|%{selItemCapacity}|Capacity of item.'),
-      strformat('wSize|%{creatureSize}|Select size of the item.|LIST|SELECT = 4 VALUE = STRING'),
+      strformat('itemSize|%{creatureSize}|Select size of the item.|LIST|SELECT = 4 VALUE = STRING'),
       strformat('wMaterial|%{equipSpecialMaterial}|Select Any Special Materials|LIST|SELECT = 0 VALUE = STRING'),
       strformat('wEnhance|0,Masterwork,1,2,3,4,5|Select Enhancement Level|RADIO|SELECT = 0 VALUE = STRING'),
       strformat('wEnch1|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
@@ -1202,7 +1211,7 @@ table (
       strformat('wEnch8|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
       strformat('wEnch9|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING')
    ))]
-   [H: "<!-- Put weapon data into a JSON. -->"]
+   [H: "<!-- Put item data into a JSON. -->"]
    [H: objectToAdd = json.set("{}", 
       "itemName", itemName, 
       "itemCategory", itemCategory, 
@@ -1227,7 +1236,7 @@ table (
       case 0: "";
       default: moniker = json.append(moniker, strformat("+%{wEnhance}"))
    ]
-   [H, if(wSize != "Medium"): moniker = json.append(moniker, wSize)]
+   [H, if(itemSize != "Medium"): moniker = json.append(moniker, itemSize)]
    [H, if(wMaterial != "(None)"): moniker = json.append(moniker, wMaterial)]
    
    [H: enchantments = ""]
@@ -1238,8 +1247,8 @@ table (
 
    [H: wDesig = json.toList(moniker, " ") + listFormat(enchantments, " %list ", "%item", " ") + itemToAdd]
    [H: newDescription = json.get(objectToAdd, "itemDescription")]
-   [H, if(wSize != "Medium"): objectToAdd = json.set(objectToAdd, "itemDescription", newDescription+" ("+wSize+")")]
-   [H: useInfo = json.set(useInfo, "itemSize", wSize, "itemMaterial", wMaterial, "itemEnhancement", wEnhance, "itemEnchantments", enchantments, "itemDesigination", wDesig)]
+   [H, if(itemSize != "Medium"): objectToAdd = json.set(objectToAdd, "itemDescription", newDescription+" ("+itemSize+")")]
+   [H: useInfo = json.set(useInfo, "itemSize", itemSize, "itemMaterial", wMaterial, "itemEnhancement", wEnhance, "itemEnchantments", enchantments, "itemDesigination", wDesig)]
    [H: "<!-- "itemType":"","itemUse":"","itemSize":"","isMelee":"","isRanged":"","isBrace":"","isDouble":"","Ammunition":"","itemSDamage":"","itemMDamage":"","itemCriticalRange":"",
       "itemCriticalMultiplier":"","itemRange":"","itemDamageType":"","itemNotes":"","itemSpecial":"","itemTrainingGroup":"" -->"]
    [H: objectToAdd = json.set(objectToAdd, "useInfo", useInfo, "itemName", wDesig)]
@@ -1251,11 +1260,15 @@ table (
    
    [H: tokItems = getProperty("Items")]
    [H: setProperty("Items", json.append(tokItems, objectToAdd))]
-   [H: setLibProperty("AmmoDetails", json.append(tokItems, objectToAdd), "Lib:Inventory")]
+   [H, if(json.isEmpty(selItem)): selItem = "{}"]
+   [R: p.watch("selItem")]
+   [R: p.watch("typeOfItems")]
+   [R: p.watch("justSelItem")]
+   [R: p.watch("objectToAdd")]
+   [H, if(! json.isEmpty(objectToAdd)): setLibProperty(typeOfItems, json.append(selItem, objectToAdd), "Lib:Inventory")]
 };{
-   [H: ammo = getLibProperty("AmmoDetails","Lib:Inventory")]
-   [H, if(json.isEmpty(ammo)): ammo = "{}"]
-   [H: justSelItem = json.get(json.path.read(ammo, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H, if(json.isEmpty(selItem)): selItem = "{}"]
+   [H: justSelItem = json.get(json.path.read(selItem, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
    [H: justSelItem = json.set(justSelItem, "itemQuantity", "selItemQuantity")]
    [H: tokItems = getProperty("Items")]
    [H, if(! json.isEmpty(justSelItem)): setProperty("Items", json.append(tokItems, justSelItem))]
@@ -1286,14 +1299,21 @@ table (
 !!
 @@ @Add Armor
 @PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H, macro("List Items@Lib:Inventory"): "ArmorDetails"]
+[H: passedVars = macro.args]
+[H: passedItems = json.get(macro.args, 0)]
+[H: typeOfItems = json.get(macro.args, 1)]
+
+[H, macro("List Items@Lib:Inventory"): typeOfItems]
 [H: equipList = macro.return]
-[H: equipList = json.append(equipList, "(Enter Manually - Weapon Isn't Listed)")]
-[H: itemCategoryList = "Adventuring Gear, Armor, Ammo, Channel Foci, Clothing, Food, Lodging, Mount, Poison, Potion, Substance, Ring, Rod, Scroll, Shield, Stave, Tattoo, Tool, Transport, Wand, Weapon, Wondrous Item"]
-[H: itemLocationList = "Armor, Belts, Body, Carried, Chest, Eyes, Feet, Hands, Left Hand, Right Hand, Head, Headband, Neck, Ring1, Ring2, Ring3, Shield, Shoulder, Wrist"]
-[H: creatureSize = "Fine, Diminutive, Tiny, Small, Medium, Large, Huge, Gargantuan, Colossal"]
-[H: equipSpecialMaterial = "(None), Abysium, Adamantine, Alchemical Silver, Angelskin, Aszite, Blackwood, Blightburn, Blood Crystal, Bone, Bronze, Bulette, Caphorite, Cold Iron, Cryptstone, Darfleaf, Darkwood, Djezet, Dragonhide, Druchite, Eel Hide, Elysian Bronze, Fire-Forged Steel, Frost-Forged Steel, Glass, Glaucite, Gold, Greenwood, Griffon Mane, Heatstone Plating, Horacalcum, Inubrix, Irespan Basalt, Lazurite, Liquid Glass, Living Steel, Mithral, Nexavaran Steel, Noqual, Obsidian, Paueliel, Pyre Steel, Siccatite, Silversheen, Singing Steel, Spiresteel, Stone, Sunsilk, Sunsilver, Throneglass, Viridium, Voidglass, Whipwood, Wyroot"]
-[H: equipModList = "(None), Adamant, Adhesive, Advancing, Amorphous, Aquadynamic, Arrow-Collecting, Balanced, Benevolent, Billowing, Bitter, Bloodthirsty, Bolstering, Brawling, Buoyant, Burdenless, Calming, Champion, Cloudburst, Cocooning, Comfort, Corsair, Cotraveling, Creeping, Crusading, Cushioned, Dastard, Deathless, Deceiving, Defiant, Delving, Denying, Determination, Dread Wing, Energy Resistance (Acid), Energy Resistance (Cold), Energy Resistance (Electricity), Energy Resistance (Fire), Energy Resistance (Sonic), Etherealness, Evolving, Expeditious, Fitting, Fortification (Heavy), Fortification (Light), Fortification (Moderate), Frosted, Ghost Spike, Ghost Touch, Glamered, Greater Aquadynamic, Greater Energy Resistance (Acid), Greater Energy Resistance (Cold), Greater Energy Resistance (Electricity), Greater Energy Resistance (Fire), Greater Energy Resistance (Sonic), Greater Shadow, Greater Slick, Grinding, Harmonizing, Hosteling, Impervious, Improved Aquadynamic, Improved Energy Resistance (Acid), Improved Energy Resistance (Cold), Improved Energy Resistance (Electricity), Improved Energy Resistance (Fire), Improved Energy Resistance (Sonic), Improved Shadow, Improved Slick, Invulnerability, Jarring, Jousting, Locksmith, Malevolent, Martyring, Mental Focus, Mind Buttressing, Mirrored, Phantasmal, Phase Lurching, Poisoning, Poison-Resistant, Putrid, Radiant, Radiant Flight, Rallying, Rampaging, Resonating, Restful, Righteous, Sensing, Shadow, Shadow Blending, Slick, Spell Dodging, Spell Resistance (13), Spell Resistance (15), Spell Resistance (17), Spell Resistance (19), Spell Storing, Spellsink, Spirit-Bonded, Spiteful, Stanching, Steaming, Terrain-Striding, Titanic, Trackless, Trapwarding, Unbound, Unbowed, Undead Controlling, Unrighteous, Venom-Eating, Vigilant, Volcanic, Vouchsafing, Warding, Wild, Withstanding"]
+[H: equipList = json.append(equipList, "(Enter Manually - Item Isn't Listed)")]
+[H: itemCategoryOptions = getLibProperty("itemCategoryOptions", "Lib:inventory")]
+[H: itemCategoryOptionList = json.toList(json.path.read(itemCategoryOptions, "."+passedItems))]
+[H: itemCategoryList = getLibProperty("itemCategories", "Lib:Inventory")]
+[H: itemLocationList = getLibProperty("itemLocation", "Lib:Inventory")]
+[H: creatureSize = getLibProperty("creatureSize", "Lib:Inventory")]
+[H: equipItemData = getLibProperty("itemData", "Lib:Inventory")]
+[H: equipSpecialMaterial = json.toList(json.path.read(equipItemData, ".itemMaterial"))]
+[H: equipModList = json.toList(json.path.read(equipItemData, ".armorEnhancements"))]
 
 [H: abort(input(
    "itemToAdd|"+equipList+"|Select the item to add|LIST|SELECT = 0 VALUE = STRING DELIMITER=JSON",
@@ -1301,28 +1321,28 @@ table (
    "selModify|0|Modify item?|CHECK"
 ))]
 
-[H, if(itemToAdd == "(Enter Manually - Weapon Isn't Listed)"), code:{
-   [H, macro("Add Armor Manually@Lib:Inventory"): ""]
+[H, if(itemToAdd == "(Enter Manually - Item Isn't Listed)"), code:{
+   [H, macro("Add "+passedItems+" Manually@Lib:Inventory"): ""]
    [H: objectToAdd = macro.return]
    [H: itemToAdd = json.get(objectToAdd, "itemName")]
 };{
    
 }]
 
-[H, if(selModify == 1  && itemToAdd != "(Enter Manually - Weapon Isn't Listed)"), code:{
-   [H: "<!-- Grab Armor database -->"]
-   [H: Armor = getLibProperty("ArmorDetails","Lib:Inventory")]
-	[H, if(json.isEmpty(Armor)): Armor = "{}"]
-   [H: "<!-- Grab from the Armor database the previously selected Armor index -->"]
-   [H: justSelItem = json.get(json.path.read(Armor, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
-   [H: selItemIndex = json.indexOf(Armor, justSelItem)]
-   [H: "<!-- Write selected Armor item into a variable -->"]
-	[H: objectToAdd = json.get(Armor, selItemIndex)]
-   [H: "<!-- Grab the selected Armor item data and put into variables -->"]
+[H, if(selModify == 1  && itemToAdd != "(Enter Manually - Item Isn't Listed)"), code:{
+   [H: "<!-- Grab item database -->"]
+   [H: selItem = getLibProperty(typeOfItems,"Lib:Inventory")]
+	[H, if(json.isEmpty(selItem)): selItem = "{}"]
+   [H: "<!-- Grab from the database the previously selected item index -->"]
+   [H: justSelItem = json.get(json.path.read(selItem, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H: selItemIndex = json.indexOf(selItem, justSelItem)]
+   [H: "<!-- Write selected item into a variable -->"]
+	[H: objectToAdd = json.get(selItem, selItemIndex)]
+   [H: "<!-- Grab the selected item data and put into variables -->"]
    [H: selItemName = json.get(objectToAdd, "itemName")]
+   [H: selItemDescription = json.get(objectToAdd, "itemDescription")]
    [H: selItemCategory = json.get(objectToAdd, "itemCategory")]
    [H: selListCategoryIndex = listFind(itemCategoryList, selItemCategory)]
-   [H: selItemDescription = json.get(objectToAdd, "itemDescription")]
    [H: selItemWeight = json.get(objectToAdd, "itemWeight")]
    [H: selItemWeightCount = json.get(objectToAdd, "itemWeightCount")]
    [H: selItemLocation = json.get(objectToAdd, "itemLocation")]
@@ -1334,11 +1354,11 @@ table (
    [H: selItemContainer = json.get(objectToAdd, "itemContainer")]
    [H: selItemCapacity = json.get(objectToAdd, "itemCapacity")]
    [H: selItemUseInfo = json.get(objectToAdd, "useInfo")]
-   [H: "<!-- Provide user with ability to modify selected Armor items data -->"]
+   [H: "<!-- Provide user with ability to modify selected items data -->"]
    [H: abort(input(
       strformat('itemName|%{selItemName}|Name of item.|TEXT|WIDTH = 50'),
-      strformat('itemCategory|%{itemCategoryList}|Category|LIST|SELECT = %{selListCategoryIndex} VALUE = STRING'), 
       strformat('itemDesc|%{selItemDescription}|Description.|TEXT|WIDTH = 50'), 
+      strformat('itemCategory|%{itemCategoryList}|Category|LIST|SELECT = %{selListCategoryIndex} VALUE = STRING'), 
       strformat('itemWeight|%{selItemWeight}|Weight.'), 
       strformat('itemWeightCount|%{selItemWeightCount}|Quantity per weight.'), 
       strformat('itemLocation|%{itemLocationList}|Location|LIST|SELECT = %{selListIndex} VALUE = STRING'), 
@@ -1346,7 +1366,7 @@ table (
       strformat('itemReference|%{selItemReference}|Reference.'), 
       strformat('itemContainer|0|Container?|CHECK'),
       strformat('itemCapacity|%{selItemCapacity}|Capacity of item.'),
-      strformat('wSize|%{creatureSize}|Select size of the item.|LIST|SELECT = 4 VALUE = STRING'),
+      strformat('itemSize|%{creatureSize}|Select size of the item.|LIST|SELECT = 4 VALUE = STRING'),
       strformat('wMaterial|%{equipSpecialMaterial}|Select Any Special Materials|LIST|SELECT = 0 VALUE = STRING'),
       strformat('wEnhance|0,Masterwork,1,2,3,4,5|Select Enhancement Level|RADIO|SELECT = 0 VALUE = STRING'),
       strformat('wEnch1|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
@@ -1359,7 +1379,7 @@ table (
       strformat('wEnch8|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
       strformat('wEnch9|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING')
    ))]
-   [H: "<!-- Put weapon data into a JSON. -->"]
+   [H: "<!-- Put item data into a JSON. -->"]
    [H: objectToAdd = json.set("{}", 
       "itemName", itemName, 
       "itemCategory", itemCategory, 
@@ -1384,7 +1404,7 @@ table (
       case 0: "";
       default: moniker = json.append(moniker, strformat("+%{wEnhance}"))
    ]
-   [H, if(wSize != "Medium"): moniker = json.append(moniker, wSize)]
+   [H, if(itemSize != "Medium"): moniker = json.append(moniker, itemSize)]
    [H, if(wMaterial != "(None)"): moniker = json.append(moniker, wMaterial)]
    
    [H: enchantments = ""]
@@ -1395,8 +1415,8 @@ table (
 
    [H: wDesig = json.toList(moniker, " ") + listFormat(enchantments, " %list ", "%item", " ") + itemToAdd]
    [H: newDescription = json.get(objectToAdd, "itemDescription")]
-   [H, if(wSize != "Medium"): objectToAdd = json.set(objectToAdd, "itemDescription", newDescription+" ("+wSize+")")]
-   [H: useInfo = json.set(useInfo, "itemSize", wSize, "itemMaterial", wMaterial, "itemEnhancement", wEnhance, "itemEnchantments", enchantments, "itemDesigination", wDesig)]
+   [H, if(itemSize != "Medium"): objectToAdd = json.set(objectToAdd, "itemDescription", newDescription+" ("+itemSize+")")]
+   [H: useInfo = json.set(useInfo, "itemSize", itemSize, "itemMaterial", wMaterial, "itemEnhancement", wEnhance, "itemEnchantments", enchantments, "itemDesigination", wDesig)]
    [H: "<!-- "itemType":"","itemUse":"","itemSize":"","isMelee":"","isRanged":"","isBrace":"","isDouble":"","Ammunition":"","itemSDamage":"","itemMDamage":"","itemCriticalRange":"",
       "itemCriticalMultiplier":"","itemRange":"","itemDamageType":"","itemNotes":"","itemSpecial":"","itemTrainingGroup":"" -->"]
    [H: objectToAdd = json.set(objectToAdd, "useInfo", useInfo, "itemName", wDesig)]
@@ -1408,11 +1428,15 @@ table (
    
    [H: tokItems = getProperty("Items")]
    [H: setProperty("Items", json.append(tokItems, objectToAdd))]
-   [H: setLibProperty("ArmorDetails", json.append(tokItems, objectToAdd), "Lib:Inventory")]
+   [H, if(json.isEmpty(selItem)): selItem = "{}"]
+   [R: p.watch("selItem")]
+   [R: p.watch("typeOfItems")]
+   [R: p.watch("justSelItem")]
+   [R: p.watch("objectToAdd")]
+   [H, if(! json.isEmpty(objectToAdd)): setLibProperty(typeOfItems, json.append(selItem, objectToAdd), "Lib:Inventory")]
 };{
-   [H: Armor = getLibProperty("ArmorDetails","Lib:Inventory")]
-   [H, if(json.isEmpty(Armor)): Armor = "{}"]
-   [H: justSelItem = json.get(json.path.read(Armor, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H, if(json.isEmpty(selItem)): selItem = "{}"]
+   [H: justSelItem = json.get(json.path.read(selItem, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
    [H: justSelItem = json.set(justSelItem, "itemQuantity", "selItemQuantity")]
    [H: tokItems = getProperty("Items")]
    [H, if(! json.isEmpty(justSelItem)): setProperty("Items", json.append(tokItems, justSelItem))]
@@ -1421,169 +1445,20 @@ table (
 [R, macro("Invent Main Starter@Lib:Inventory"): ""]
 
 !!
-@@ @Add Armor Manually
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=default ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: screen = input(
-	"junkvar|Do not add +1s or change the base stats|Enter values for the armor BEFORE any enhancemnts|Label",
-	"armname|Custom Armor|Name|TEXT|WIDTH = 40",
-	"armAC|1|Armor Value",
-	"armcheckpen|1|Enter the armor check penalty",
-	"armmaxdex|1|Enter the maximum dex bonus the armor allows",
-	"armfail|5|Enter the spell failure %",
-	"armweightclass|Light,Medium,Heavy|Set armor weight class|radio|orient = h VALUE = STRING",
-	"Weight|20|Enter the weight of the armor at MEDIUM size"
-)]
-[H: abort(screen)]
-
-[H: object = "Name = "+armname+"##Weight = "+Weight+"##Description = Armor##Qty = 1##Location = "+armname+"##LocPrior = 0##Cap = 0##WeightCount = 1##Class = Armor##Container = 0##useInfo = {}"]
-[H: object = json.fromStrProp(object,"##")]
-[H: useInfo = json.set("{}","Name",armname,"AC",armAC,"Check Penalty",armcheckpen,"MaxDex",armmaxdex,"Spell Fail",armfail,"Weight Class",armweightclass)]
-[H: object = json.set(object,"useInfo",useInfo)]
-
-[H: macro.return = object]
-
-!!
-@@ @Add Double Weapon Wrap
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=red ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: objectToAdd = macro.args]
-[H: bridgename = json.get(objectToAdd,"Name")]
-
-[H: useInfo = json.get(objectToAdd,"useInfo")]
-[H: wepends = json.get(useInfo,"Ends")]
-[H: wep1name = listGet(wepends,0)]
-[H: wep2name = listGet(wepends,1)]
-[H: wep1details = json.get(useInfo,"End 1")]
-[H: wep2details = json.get(useInfo,"End 2")]
-[H: shortname = wep1name+" end of "+bridgename]
-[H: shortname2 = wep2name+" end of "+bridgename]
-
-[H: wepenchants = "(None),Anarchic,Axiomatic,Bane,Brilliant Energy,Dancing,Defending,Disrupting,Flaming,Flaming Burst,Frost,Ghost Touch,Holy,Icy Burst,Keen,Ki Focus,Merciful,Mighty Cleaving,Shock,Shocking Burst,Speed,Spell Storing,Thundering,Unholy,Vicious,Vorpal,Wounding"]
-
-[H: screen1 = input(
-	"tab 0|General Weapon Details||tab",
-	"miscABbonus|0|Enter Misc. AB Bonus (From Weapon Focus, Etc.)##miscdmgbonus|0|Enter Misc. Dmg. Bonus (From Weapon Spec., Etc.)##keen|0|Do You Have Improved Critical for this Weapon?|CHECK##nonprof|0|CHECK If You Are _NOT_ Proficient With This Weapon (-4 Penalty)|CHECK",
-	"tab 1|"+wep1name+" End Details||tab",
-	"wmaterial|(None),Adamantine,Darkwood,Cold Iron,Mithral,Silvered|Select Any Special Materials|RADIO|SELECT = 0 VALUE = STRING##wenhance|0,Masterwork,1,2,3,4,5|Select Enhancement Level|RADIO|SELECT = 0 VALUE = STRING##wench1|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench3|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench4|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench5|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench6|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench7|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench8|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench9|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING",
-	"tab 2|"+wep2name+" End Details||tab",
-	"wmaterial2|(None),Adamantine,Darkwood,Cold Iron,Mithral,Silvered|Select Any Special Materials|RADIO|SELECT = 0 VALUE = STRING##wenhance2|0,Masterwork,1,2,3,4,5|Select Enhancement Level|RADIO|SELECT = 0 VALUE = STRING##wench1_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench2_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench3_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench4_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench5_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench6_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench7_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench8_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench9_2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING"
-)]
-[H: abort(screen1)]
-
-[H, if(nonprof == 1): miscABbonus = miscABbonus-4]
-
-[H: moniker = ""]
-[H: enchantments = ""]
-[H, if(wenhance!= 0 && wenhance!= "Masterwork"): moniker = "+"+wenhance+" "]
-[H, if(wenhance == "Masterwork"): moniker = "Mwk "]
-[H, if(wench1!= "(None)"), code:{[moniker = moniker+" "+wench1][enchantments = listAppend(enchantments,wench1)]};{}]
-[H, if(wench2!= "(None)"), code:{[moniker = moniker+" "+wench2][enchantments = listAppend(enchantments,wench2)]};{}]
-[H, if(wench3!= "(None)"), code:{[moniker = moniker+" "+wench3][enchantments = listAppend(enchantments,wench3)]};{}]
-[H, if(wench4!= "(None)"), code:{[moniker = moniker+" "+wench4][enchantments = listAppend(enchantments,wench4)]};{}]
-[H, if(wench5!= "(None)"), code:{[moniker = moniker+" "+wench5][enchantments = listAppend(enchantments,wench5)]};{}]
-[H, if(wench6!= "(None)"), code:{[moniker = moniker+" "+wench6][enchantments = listAppend(enchantments,wench6)]};{}]
-[H, if(wench7!= "(None)"), code:{[moniker = moniker+" "+wench7][enchantments = listAppend(enchantments,wench7)]};{}]
-[H, if(wench8!= "(None)"), code:{[moniker = moniker+" "+wench8][enchantments = listAppend(enchantments,wench8)]};{}]
-[H, if(wench9!= "(None)"), code:{[moniker = moniker+" "+wench9][enchantments = listAppend(enchantments,wench9)]};{}]
-
-[H: moniker2 = ""]
-[H: enchantments2 = ""]
-[H, if(wenhance2!= 0 && wenhance2!= "Masterwork"): moniker2 = "+"+wenhance2+" "]
-[H, if(wenhance2 == "Masterwork"): moniker2 = "Mwk "]
-[H, if(wench1_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench1_2][enchantments2 = listAppend(enchantments2,wench1_2)]};{}]
-[H, if(wench2_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench2_2][enchantments2 = listAppend(enchantments2,wench2_2)]};{}]
-[H, if(wench3_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench3_2][enchantments2 = listAppend(enchantments2,wench3_2)]};{}]
-[H, if(wench4_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench4_2][enchantments2 = listAppend(enchantments2,wench4_2)]};{}]
-[H, if(wench5_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench5_2][enchantments2 = listAppend(enchantments2,wench5_2)]};{}]
-[H, if(wench6_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench6_2][enchantments2 = listAppend(enchantments2,wench6_2)]};{}]
-[H, if(wench7_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench7_2][enchantments2 = listAppend(enchantments2,wench7_2)]};{}]
-[H, if(wench8_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench8_2][enchantments2 = listAppend(enchantments2,wench8_2)]};{}]
-[H, if(wench9_2!= "(None)"), code:{[moniker2 = moniker2+" "+wench9_2][enchantments2 = listAppend(enchantments2,wench9_2)]};{}]
-
-[H, if(wmaterial!= "(None)"): moniker = if(moniker == "",wmaterial+" ",moniker+" "+wmaterial+" ")]
-[H, if(wmaterial2!= "(None)"): moniker2 = if(moniker2 == "",wmaterial2+" ",moniker2+" "+wmaterial2+" ")]
-
-[H, if(wenhance == "Masterwork"), code:{
-	[wAB = miscABbonus+1)]
-	[dmgbonus = miscdmgbonus]
-};{
-	[wAB = miscABbonus+wenhance]
-	[dmgbonus = miscdmgbonus+wenhance]
-}]
-[H, if(wenhance2 == "Masterwork"), code:{
-	[wAB2 = miscABbonus+1)]
-	[dmgbonus2 = miscdmgbonus]
-};{
-	[wAB2 = miscABbonus+wenhance2]
-	[dmgbonus2 = miscdmgbonus+wenhance2]
-}]
-
-[H, if(wmaterial == "Silvered"): dmgbonus = dmgbonus-1]
-[H, if(wench1 == "Keen" || wench2 == "Keen" || wench3 == "Keen" ||wench4 == "Keen" ||wench5 == "Keen" ||wench6 == "Keen" ||wench7 == "Keen" ||wench8 == "Keen" ||wench9 == "Keen"): keen = 1; keen = keen]
-[H, if(wmaterial2 == "Silvered"): dmgbonus2 = dmgbonus2-1]
-[H, if(wench1_2 == "Keen" || wench2_2 == "Keen" || wench3_2 == "Keen" ||wench4_2 == "Keen" ||wench5_2 == "Keen" ||wench6_2 == "Keen" ||wench7_2 == "Keen" ||wench8_2 == "Keen" ||wench9_2 == "Keen"): keen2 = 1; keen2 = keen]
-
-[H, if(keen == 1), code:{
-	[H: threat = json.get(wep1details,"Threat")]
-	[H: num = 21-threat]
-	[H: threat = 21-(2*num)]
-	[H: wep1details = json.set(wep1details,"Threat",threat)]
-};{}]
-[H, if(keen2 == 1), code:{
-	[H: threat = json.get(wep2details,"Threat")]
-	[H: num = 21-threat]
-	[H: threat = 21-(2*num)]
-	[H: wep2details = json.set(wep2details,"Threat",threat)]
-};{}]
-
-[H: wdesig = moniker+" "+wep1name]
-[H: wdesig2 = moniker2+" "+wep2name]
-
-[H: description = json.get(objectToAdd,"Description")]
-[H, if(Size!= "Medium"): objectToAdd = json.set(objectToAdd,"Description",description+" {"+Size+"}")]
-
-[H: Weight = json.get(objectToAdd,"Weight")]
-[H, if(Size == "Small"), code:{
-	[dmgdie = json.get(wep1details,"SDie")]
-	[dmgdie2 = json.get(wep2details,"SDie")]
-	[Weight = Weight/2]
-};{}]
-[H, if(Size == "Medium"), code:{
-	[dmgdie = json.get(wep1details,"MDie")]
-	[dmgdie2 = json.get(wep2details,"MDie")]
-}]
-[H, if(Size!= "Small" && Size!= "Medium"), code:{
-	[screen = input(
-	"junkvar|You have to help us out|We are missing some info|Label",
-	"dmgdie|1d8|Enter the correct damage die for the "+wep1name+" end",
-	"dmgdie2|1d8|Enter the correct damage die for the "+wep2name+" end",
-	"Weight|5|Enter the correct weight of the weapon"
-	)]
-	[abort(screen)]
-};{}]
-
-[H: wep1details = json.set(wep1details,"Material",wmaterial,"Enhance",wenhance,"DmgBonus",dmgbonus,"AB",wAB,"Enchantments",enchantments,"Desig",wdesig,"Shortname",shortname,"Moniker",moniker,"Die",dmgdie)]
-[H: wep2details = json.set(wep2details,"Material",wmaterial2,"Enhance",wenhance2,"DmgBonus",dmgbonus2,"AB",wAB2,"Enchantments",enchantments2,"Desig",wdesig2,"Shortname",shortname2,"Moniker",moniker2,"Die",dmgdie2)]
-[H: useInfo = json.set(useInfo,"End 1",wep1details,"End 2",wep2details)]
-
-[H: mainname = bridgename+" ("+wdesig+" / "+wdesig2+")"]
-
-[H: objectToAdd = json.set(objectToAdd,"useInfo",useInfo,"Name",mainname,"itemLocation",mainname,"Weight",Weight)]
-
-[H: macro.return = objectToAdd]
-
-!!
 @@ @Add Gear
 @PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
+[H: passedVars = macro.args]
 [H: passedItems = json.get(macro.args, 0)]
 [H: typeOfItems = json.get(macro.args, 1)]
 
 [H, macro("List Items@Lib:Inventory"): typeOfItems]
 [H: equipList = macro.return]
 [H: equipList = json.append(equipList, "(Enter Manually - Item Isn't Listed)")]
+[H: itemCategoryOptions = getLibProperty("itemCategoryOptions", "Lib:inventory")]
+[H: itemCategoryOptionList = json.toList(json.path.read(itemCategoryOptions, ".Good"))]
 [H: itemCategoryList = getLibProperty("itemCategories", "Lib:Inventory")]
 [H: itemLocationList = getLibProperty("itemLocation", "Lib:Inventory")]
 [H: creatureSize = getLibProperty("creatureSize", "Lib:Inventory")]
-
 
 [H: abort(input(
    "itemToAdd|"+equipList+"|Select the item to add|LIST|SELECT = 0 VALUE = STRING DELIMITER = JSON",
@@ -1603,24 +1478,29 @@ table (
    [H: objectToAdd = json.get(selItem, selItemIndex)]
    [H: "<!-- Grab the selected Item data and put into variables -->"]
    [H: selItemName = json.get(objectToAdd, "itemName")]
-   [H: selItemCategory = json.get(objectToAdd, "itemCategory")]
-   [H: selListCategoryIndex = listFind(itemCategoryList, selItemCategory)]
    [H: selItemDescription = json.get(objectToAdd, "itemDescription")]
+   [H: selItemCategory= json.get(objectToAdd, "itemCategory")]
+   [H: selItemCategoryIndex = listFind(itemCategoryOptionList, selItemCategory)]
    [H: selItemWeight = json.get(objectToAdd, "itemWeight")]
    [H: selItemWeightCount = json.get(objectToAdd, "itemWeightCount")]
    [H: selItemLocation = json.get(objectToAdd, "itemLocation")]
    [H: selListIndex = listFind(itemLocationList, selItemLocation)]
    [H: selItemLocationPrior = json.get(objectToAdd, "itemLocationPrior")]
    [H: selItemCost = json.get(objectToAdd, "itemCost")]
-   [H: selItemClass = json.get(objectToAdd, "itemClass")]
+   [H: selItemClass= json.get(objectToAdd, "itemClass")]
+   [H: selListClassIndex = listFind(itemCategoryList, passedItems)]
    [H: selItemReference = json.get(objectToAdd, "itemReference")]
    [H: selItemContainer = json.get(objectToAdd, "itemContainer")]
    [H: selItemCapacity = json.get(objectToAdd, "itemCapacity")]
+   [H: selItemClassIndex = listFind(itemCategoryList, selItemClass)]
    [H: selItemUseInfo = json.get(objectToAdd, "useInfo")]
-   [H: "<!-- Provide user with ability to modify selected Armor items data -->"]
+   [H: selItemSize = json.get(selItemUseInfo, "itemSize")]
+   [H: selItemSizeIndex = listFind(creatureSize, selItemSize)]
+   [H: selItemNotes = json.get(selItemUseInfo, "itemNotes")]
+   [H: "<!-- Provide user with ability to modify selected items data -->"]
    [H: abort(input(
       strformat('itemName|%{selItemName}|Name of item.|TEXT|WIDTH = 50'),
-      strformat('itemCategory|%{itemCategoryList}|Category|LIST|SELECT = %{selListCategoryIndex} VALUE = STRING'), 
+      strformat('itemCategory|%{itemCategoryOptionList}|Category|LIST|SELECT = %{selItemCategoryIndex} VALUE = STRING'), 
       strformat('itemDesc|%{selItemDescription}|Description.|TEXT|WIDTH = 50'), 
       strformat('itemWeight|%{selItemWeight}|Weight.'), 
       strformat('itemWeightCount|%{selItemWeightCount}|Quantity per weight.'), 
@@ -1629,20 +1509,11 @@ table (
       strformat('itemReference|%{selItemReference}|Reference.'), 
       strformat('itemContainer|0|Container?|CHECK'),
       strformat('itemCapacity|%{selItemCapacity}|Capacity of item.'),
-      strformat('wSize|%{creatureSize}|Select size of the item.|LIST|SELECT = 4 VALUE = STRING'),
-      strformat('wMaterial|%{equipSpecialMaterial}|Select Any Special Materials|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnhance|0,Masterwork,1,2,3,4,5|Select Enhancement Level|RADIO|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch1|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch2|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch3|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch4|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch5|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch6|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch7|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch8|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch9|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING')
+      strformat('itemClass|%{itemCategoryList}|Select the class of the item.|LIST|SELECT = %{selItemClassIndex} VALUE = STRING'),
+      strformat('itemSize|%{creatureSize}|Select size of the item.|LIST|SELECT = %{selItemSizeIndex} VALUE = STRING'),
+      strformat('itemNotes|%{selItemNotes}|Any item notes? Such as provides +2 to Knowledge(Arcana)...|TEXT|WIDTH = 50')
    ))]
-   [H: "<!-- Put weapon data into a JSON. -->"]
+   [H: "<!-- Put item data into a JSON. -->"]
    [H: objectToAdd = json.set("{}", 
       "itemName", itemName, 
       "itemCategory", itemCategory, 
@@ -1652,7 +1523,7 @@ table (
       "itemLocation", itemLocation, 
       "itemLocationPrior", 0, 
       "itemCost", itemCost,
-      "itemClass", itemCategory,
+      "itemClass", itemClass,
       "itemReference", itemReference,
       "itemQuantity", selItemQuantity, 
       "itemContainer", itemContainer, 
@@ -1660,43 +1531,18 @@ table (
       "useInfo", selItemUseInfo
    )]
    [H: useInfo = json.get(objectToAdd, "useInfo")]
-   
-   [H: moniker = ""]
-   [H, switch(wEnhance):
-      case "Masterwork": moniker = json.append(moniker, "Mwk");
-      case 0: "";
-      default: moniker = json.append(moniker, strformat("+%{wEnhance}"))
-   ]
-   [H, if(wSize != "Medium"): moniker = json.append(moniker, wSize)]
-   [H, if(wMaterial != "(None)"): moniker = json.append(moniker, wMaterial)]
-   
-   [H: enchantments = ""]
-   [H, count(9), code: {
-      [H: wEnchNum = eval("wEnch"+add(roll.count, 1))]
-      [H, if(wEnchNum != "(None)"): enchantments = listAppend(enchantments, wEnchNum)]
-   }]
-
-   [H: wDesig = json.toList(moniker, " ") + listFormat(enchantments, " %list ", "%item", " ") + itemToAdd]
-   [H: newDescription = json.get(objectToAdd, "itemDescription")]
-   [H, if(wSize != "Medium"): objectToAdd = json.set(objectToAdd, "itemDescription", newDescription+" ("+wSize+")")]
-   [H: useInfo = json.set(useInfo, "itemSize", wSize, "itemMaterial", wMaterial, "itemEnhancement", wEnhance, "itemEnchantments", enchantments, "itemDesigination", wDesig)]
-   [H: '<!-- "itemType":"","itemUse":"","itemSize":"","isMelee":"","isRanged":"","isBrace":"","isDouble":"","Ammunition":"","itemSDamage":"","itemMDamage":"","itemCriticalRange":"",
-      "itemCriticalMultiplier":"","itemRange":"","itemDamageType":"","itemNotes":"","itemSpecial":"","itemTrainingGroup":"" -->']
-   [H: objectToAdd = json.set(objectToAdd, "useInfo", useInfo, "itemName", wDesig)]
-
-   [H, macro("Adjust Item Weight@Lib:Inventory"): objectToAdd]
-   [H: curItemWeight = macro.return]
-   
-   [H: objectToAdd = json.set(objectToAdd, "itemWeight", curItemWeight)]
-   
+   [H: useInfo = json.set(useInfo, "itemSize", itemSize, "itemNotes", itemNotes, "itemDesigination", itemName)]
+   [H: objectToAdd = json.set(objectToAdd, "useInfo", useInfo)]
+   [R: p.watch("objectToAdd")]
+   [R: p.watch("typeOfItems")]
    [H: tokItems = getProperty("Items")]
    [H: setProperty("Items", json.append(tokItems, objectToAdd))]
-   [H: setLibProperty(typeOfItems, json.append(tokItems, objectToAdd), "Lib:Inventory")]
+   [H: setLibProperty(typeOfItems, json.set(selItem, selItemIndex, objectToAdd), "Lib:Inventory")]
 };{
-   [H: libItem = getLibProperty(typeOfItems, "Lib:Inventory")]
-   [H, if(json.isEmpty(libItem)): libItem = "{}"]
-   [H: justSelItem = json.get(json.path.read(libItem, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
-   [H: justSelItem = json.set(justSelItem, "itemQuantity", "selItemQuantity")]
+   [H: libItems = getLibProperty(typeOfItems, "Lib:Inventory")]
+   [H, if(json.isEmpty(libItems)): libItems = "{}"]
+   [H: justSelItem = json.get(json.path.read(libItems, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H: justSelItem = json.set(justSelItem, "itemQuantity", selItemQuantity)]
    [H: tokItems = getProperty("Items")]
    [H, if(! json.isEmpty(justSelItem)): setProperty("Items", json.append(tokItems, justSelItem))]
 }]
@@ -1706,30 +1552,25 @@ table (
 !!
 @@ @Add Good
 @PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
+[H: passedVars = macro.args]
 [H: passedItems = json.get(macro.args, 0)]
 [H: typeOfItems = json.get(macro.args, 1)]
 
 [H, macro("List Items@Lib:Inventory"): typeOfItems]
 [H: equipList = macro.return]
 [H: equipList = json.append(equipList, "(Enter Manually - Item Isn't Listed)")]
+[H: itemCategoryOptions = getLibProperty("itemCategoryOptions", "Lib:inventory")]
+[H: itemCategoryOptionList = json.toList(json.path.read(itemCategoryOptions, ".Good"))]
 [H: itemCategoryList = getLibProperty("itemCategories", "Lib:Inventory")]
 [H: itemLocationList = getLibProperty("itemLocation", "Lib:Inventory")]
 [H: creatureSize = getLibProperty("creatureSize", "Lib:Inventory")]
 
-
 [H: abort(input(
-   "itemToAdd|"+equipList+"|Select the item to add|LIST|SELECT = 0 VALUE = STRING DELIMITER=JSON",
+   "itemToAdd|"+equipList+"|Select the item to add|LIST|SELECT = 0 VALUE = STRING DELIMITER = JSON",
    "selItemQuantity|0|Quantity.",
    "selModify|0|Modify item?|CHECK"
 ))]
 
-[H, if(itemToAdd == "(Enter Manually - Item Isn't Listed)"), code:{
-   [H, macro("Add Good Manually@Lib:Inventory"): ""]
-   [H: objectToAdd = macro.return]
-   [H: itemToAdd = json.get(objectToAdd, "itemName")]
-};{
-
-}]
 
 [H, if(selModify == 1  && itemToAdd != "(Enter Manually - Item Isn't Listed)"), code:{
    [H: "<!-- Grab database -->"]
@@ -1742,24 +1583,29 @@ table (
    [H: objectToAdd = json.get(selItem, selItemIndex)]
    [H: "<!-- Grab the selected Item data and put into variables -->"]
    [H: selItemName = json.get(objectToAdd, "itemName")]
-   [H: selItemCategory = json.get(objectToAdd, "itemCategory")]
-   [H: selListCategoryIndex = listFind(itemCategoryList, selItemCategory)]
    [H: selItemDescription = json.get(objectToAdd, "itemDescription")]
+   [H: selItemCategory= json.get(objectToAdd, "itemCategory")]
+   [H: selItemCategoryIndex = listFind(itemCategoryOptionList, selItemCategory)]
    [H: selItemWeight = json.get(objectToAdd, "itemWeight")]
    [H: selItemWeightCount = json.get(objectToAdd, "itemWeightCount")]
    [H: selItemLocation = json.get(objectToAdd, "itemLocation")]
    [H: selListIndex = listFind(itemLocationList, selItemLocation)]
    [H: selItemLocationPrior = json.get(objectToAdd, "itemLocationPrior")]
    [H: selItemCost = json.get(objectToAdd, "itemCost")]
-   [H: selItemClass = json.get(objectToAdd, "itemClass")]
+   [H: selItemClass= json.get(objectToAdd, "itemClass")]
+   [H: selListClassIndex = listFind(itemCategoryList, passedItems)]
    [H: selItemReference = json.get(objectToAdd, "itemReference")]
    [H: selItemContainer = json.get(objectToAdd, "itemContainer")]
    [H: selItemCapacity = json.get(objectToAdd, "itemCapacity")]
+   [H: selItemClassIndex = listFind(itemCategoryList, selItemClass)]
    [H: selItemUseInfo = json.get(objectToAdd, "useInfo")]
-   [H: "<!-- Provide user with ability to modify selected Armor items data -->"]
+   [H: selItemSize = json.get(selItemUseInfo, "itemSize")]
+   [H: selItemSizeIndex = listFind(creatureSize, selItemSize)]
+   [H: selItemNotes = json.get(selItemUseInfo, "itemNotes")]
+   [H: "<!-- Provide user with ability to modify selected items data -->"]
    [H: abort(input(
       strformat('itemName|%{selItemName}|Name of item.|TEXT|WIDTH = 50'),
-      strformat('itemCategory|%{itemCategoryList}|Category|LIST|SELECT = %{selListCategoryIndex} VALUE = STRING'), 
+      strformat('itemCategory|%{itemCategoryOptionList}|Category|LIST|SELECT = %{selItemCategoryIndex} VALUE = STRING'), 
       strformat('itemDesc|%{selItemDescription}|Description.|TEXT|WIDTH = 50'), 
       strformat('itemWeight|%{selItemWeight}|Weight.'), 
       strformat('itemWeightCount|%{selItemWeightCount}|Quantity per weight.'), 
@@ -1768,20 +1614,11 @@ table (
       strformat('itemReference|%{selItemReference}|Reference.'), 
       strformat('itemContainer|0|Container?|CHECK'),
       strformat('itemCapacity|%{selItemCapacity}|Capacity of item.'),
-      strformat('wSize|%{creatureSize}|Select size of the item.|LIST|SELECT = 4 VALUE = STRING'),
-      strformat('wMaterial|%{equipSpecialMaterial}|Select Any Special Materials|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnhance|0,Masterwork,1,2,3,4,5|Select Enhancement Level|RADIO|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch1|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch2|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch3|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch4|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch5|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch6|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch7|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch8|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING'),
-      strformat('wEnch9|%{equipModList}|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING')
+      strformat('itemClass|%{itemCategoryList}|Select the class of the item.|LIST|SELECT = %{selItemClassIndex} VALUE = STRING'),
+      strformat('itemSize|%{creatureSize}|Select size of the item.|LIST|SELECT = %{selItemSizeIndex} VALUE = STRING'),
+      strformat('itemNotes|%{selItemNotes}|Any item notes? Such as provides +2 to Knowledge(Arcana)...|TEXT|WIDTH = 50')
    ))]
-   [H: "<!-- Put weapon data into a JSON. -->"]
+   [H: "<!-- Put item data into a JSON. -->"]
    [H: objectToAdd = json.set("{}", 
       "itemName", itemName, 
       "itemCategory", itemCategory, 
@@ -1791,7 +1628,7 @@ table (
       "itemLocation", itemLocation, 
       "itemLocationPrior", 0, 
       "itemCost", itemCost,
-      "itemClass", itemCategory,
+      "itemClass", itemClass,
       "itemReference", itemReference,
       "itemQuantity", selItemQuantity, 
       "itemContainer", itemContainer, 
@@ -1799,43 +1636,16 @@ table (
       "useInfo", selItemUseInfo
    )]
    [H: useInfo = json.get(objectToAdd, "useInfo")]
-   
-   [H: moniker = ""]
-   [H, switch(wEnhance):
-      case "Masterwork": moniker = json.append(moniker, "Mwk");
-      case 0: "";
-      default: moniker = json.append(moniker, strformat("+%{wEnhance}"))
-   ]
-   [H, if(wSize != "Medium"): moniker = json.append(moniker, wSize)]
-   [H, if(wMaterial != "(None)"): moniker = json.append(moniker, wMaterial)]
-   
-   [H: enchantments = ""]
-   [H, count(9), code: {
-      [H: wEnchNum = eval("wEnch"+add(roll.count, 1))]
-      [H, if(wEnchNum != "(None)"): enchantments = listAppend(enchantments, wEnchNum)]
-   }]
-
-   [H: wDesig = json.toList(moniker, " ") + listFormat(enchantments, " %list ", "%item", " ") + itemToAdd]
-   [H: newDescription = json.get(objectToAdd, "itemDescription")]
-   [H, if(wSize != "Medium"): objectToAdd = json.set(objectToAdd, "itemDescription", newDescription+" ("+wSize+")")]
-   [H: useInfo = json.set(useInfo, "itemSize", wSize, "itemMaterial", wMaterial, "itemEnhancement", wEnhance, "itemEnchantments", enchantments, "itemDesigination", wDesig)]
-   [H: '<!-- "itemType":"","itemUse":"","itemSize":"","isMelee":"","isRanged":"","isBrace":"","isDouble":"","Ammunition":"","itemSDamage":"","itemMDamage":"","itemCriticalRange":"",
-      "itemCriticalMultiplier":"","itemRange":"","itemDamageType":"","itemNotes":"","itemSpecial":"","itemTrainingGroup":"" -->']
-   [H: objectToAdd = json.set(objectToAdd, "useInfo", useInfo, "itemName", wDesig)]
-
-   [H, macro("Adjust Item Weight@Lib:Inventory"): objectToAdd]
-   [H: curItemWeight = macro.return]
-   
-   [H: objectToAdd = json.set(objectToAdd, "itemWeight", curItemWeight)]
-   
+   [H: useInfo = json.set(useInfo, "itemSize", itemSize, "itemNotes", itemNotes, "itemDesigination", itemName)]
+   [H: objectToAdd = json.set(objectToAdd, "useInfo", useInfo)]
    [H: tokItems = getProperty("Items")]
    [H: setProperty("Items", json.append(tokItems, objectToAdd))]
-   [H: setLibProperty(typeOfItems, json.append(tokItems, objectToAdd), "Lib:Inventory")]
+   [H: setLibProperty(typeOfItems, json.set(selItem, selItemIndex, objectToAdd), "Lib:Inventory")]
 };{
-   [H: libItem = getLibProperty(typeOfItems, "Lib:Inventory")]
-   [H, if(json.isEmpty(libItem)): libItem = "{}"]
-   [H: justSelItem = json.get(json.path.read(libItem, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
-   [H: justSelItem = json.set(justSelItem, "itemQuantity", "selItemQuantity")]
+   [H: libItems = getLibProperty(typeOfItems, "Lib:Inventory")]
+   [H, if(json.isEmpty(libItems)): libItems = "{}"]
+   [H: justSelItem = json.get(json.path.read(libItems, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H: justSelItem = json.set(justSelItem, "itemQuantity", selItemQuantity)]
    [H: tokItems = getProperty("Items")]
    [H, if(! json.isEmpty(justSelItem)): setProperty("Items", json.append(tokItems, justSelItem))]
 }]
@@ -1845,15 +1655,94 @@ table (
 !!
 @@ @Add Good Manually
 @PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=default ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: screen = input(
-	"name|Name","Weight|1","cont|0","description|Text"
-)]
-[H: abort(screen)]
 
-[H: object = "Name = "+name+"##Weight = "+Weight+"##Description = "+description+"##Qty = 1##Location = "+name+"##LocPrior = 0##Cap = 0##WeightCount = 1##Class = Goods##Container = "+cont+"##useInfo = {}"]
-[H: object = json.fromStrProp(object,"##")]
+[H, if(selModify == 1  && itemToAdd != "(Enter Manually - Item Isn't Listed)"), code:{
+   [H: "<!-- Grab database -->"]
+   [H: selItem = getLibProperty(typeOfItems,"Lib:Inventory")]
+   [H, if(json.isEmpty(selItem)): selItem = "{}"]
+   [H: "<!-- Grab from the Item database the previously selected Item index -->"]
+   [H: justSelItem = json.get(json.path.read(selItem, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H: selItemIndex = json.indexOf(selItem, justSelItem)]
+   [H: "<!-- Write selected Item into a variable -->"]
+   [H: objectToAdd = json.get(selItem, selItemIndex)]
+   [H: "<!-- Grab the selected Item data and put into variables -->"]
+   [H: selItemName = json.get(objectToAdd, "itemName")]
+   [H: selItemDescription = json.get(objectToAdd, "itemDescription")]
+   [H: selItemCategory= json.get(objectToAdd, "itemCategory")]
+   [H: selItemCategoryIndex = listFind(itemCategoryOptionList, selItemCategory)]
+   [R: p.watch("selItem")]
+   [R: p.watch("selItemCategory")]
+   [R: p.watch("selItemCategoryIndex")]
+   [H: selItemWeight = json.get(objectToAdd, "itemWeight")]
+   [H: selItemWeightCount = json.get(objectToAdd, "itemWeightCount")]
+   [H: selItemLocation = json.get(objectToAdd, "itemLocation")]
+   [H: selListIndex = listFind(itemLocationList, selItemLocation)]
+   [H: selItemLocationPrior = json.get(objectToAdd, "itemLocationPrior")]
+   [H: selItemCost = json.get(objectToAdd, "itemCost")]
+   [H: selItemClass= json.get(objectToAdd, "itemClass")]
+   [H: selListClassIndex = listFind(itemCategoryList, passedItems)]
+   [H: selItemReference = json.get(objectToAdd, "itemReference")]
+   [H: selItemContainer = json.get(objectToAdd, "itemContainer")]
+   [H: selItemCapacity = json.get(objectToAdd, "itemCapacity")]
+   [H: selItemClassIndex = listFind(itemCategoryList, selItemClass)]
+   [R: p.watch("passedItems")]
+   [R: p.watch("selItemClass")]
+   [R: p.watch("selItemClassIndex")]
+   [R: p.watch("itemCategoryList")]
+   [H: selItemUseInfo = json.get(objectToAdd, "useInfo")]
+   [H: selItemSize = json.get(selItemUseInfo, "itemSize")]
+   [H: selItemSizeIndex = listFind(creatureSize, selItemSize)]
+   [H: selItemNotes = json.get(selItemUseInfo, "itemNotes")]
+   [H: "<!-- Provide user with ability to modify selected items data -->"]
+   [H: abort(input(
+      strformat('itemName|%{selItemName}|Name of item.|TEXT|WIDTH = 50'),
+      strformat('itemCategory|%{itemCategoryOptionList}|Category|LIST|SELECT = %{selItemCategoryIndex} VALUE = STRING'), 
+      strformat('itemDesc|%{selItemDescription}|Description.|TEXT|WIDTH = 50'), 
+      strformat('itemWeight|%{selItemWeight}|Weight.'), 
+      strformat('itemWeightCount|%{selItemWeightCount}|Quantity per weight.'), 
+      strformat('itemLocation|%{itemLocationList}|Location|LIST|SELECT = %{selListIndex} VALUE = STRING'), 
+      strformat('itemCost|%{selItemCost}|Cost?'),
+      strformat('itemReference|%{selItemReference}|Reference.'), 
+      strformat('itemContainer|0|Container?|CHECK'),
+      strformat('itemCapacity|%{selItemCapacity}|Capacity of item.'),
+      strformat('itemClass|%{itemCategoryList}|Select the class of the item.|LIST|SELECT = %{selItemClassIndex} VALUE = STRING'),
+      strformat('itemSize|%{creatureSize}|Select size of the item.|LIST|SELECT = %{selItemSizeIndex} VALUE = STRING'),
+      strformat('itemNotes|%{selItemNotes}|Any item notes? Such as provides +2 to Knowledge(Arcana)...|TEXT|WIDTH = 50')
+   ))]
+   [H: "<!-- Put item data into a JSON. -->"]
+   [H: objectToAdd = json.set("{}", 
+      "itemName", itemName, 
+      "itemCategory", itemCategory, 
+      "itemDescription", itemDesc, 
+      "itemWeight", itemWeight, 
+      "itemWeightCount", itemWeightCount,
+      "itemLocation", itemLocation, 
+      "itemLocationPrior", 0, 
+      "itemCost", itemCost,
+      "itemClass", itemClass,
+      "itemReference", itemReference,
+      "itemQuantity", selItemQuantity, 
+      "itemContainer", itemContainer, 
+      "itemCapacity", itemCapacity, 
+      "useInfo", selItemUseInfo
+   )]
+   [H: useInfo = json.get(objectToAdd, "useInfo")]
+   [H: useInfo = json.set(useInfo, "itemSize", itemSize, "itemNotes", itemNotes, "itemDesigination", itemName)]
+   [H: objectToAdd = json.set(objectToAdd, "useInfo", useInfo)]
+   [R: p.watch("objectToAdd")]
+   [R: p.watch("typeOfItems")]
+   [H: tokItems = getProperty("Items")]
+   [H: setProperty("Items", json.append(tokItems, objectToAdd))]
+   [H: setLibProperty(typeOfItems, json.set(selItem, selItemIndex, objectToAdd), "Lib:Inventory")]
+};{
+   [H: libItems = getLibProperty(typeOfItems, "Lib:Inventory")]
+   [H, if(json.isEmpty(libItems)): libItems = "{}"]
+   [H: justSelItem = json.get(json.path.read(libItems, "[?(@.itemName == '"+itemToAdd+"')]"), 0)]
+   [H: justSelItem = json.set(justSelItem, "itemQuantity", selItemQuantity)]
+   [H: tokItems = getProperty("Items")]
+   [H, if(! json.isEmpty(justSelItem)): setProperty("Items", json.append(tokItems, justSelItem))]
+}]
 
-[H: Items = json.append(Items,object)]
 [macro("Invent Main Starter@Lib:Inventory"): ""]
 
 !!
@@ -1862,288 +1751,50 @@ table (
 [H: options = getLibProperty("itemCategories", "Lib:Inventory")]
 
 [H: abort(input(
-	"pickedCategory|"+options+"|To what category does the item belong?|radio|select = 0 VALUE = STRING"
+	"passedItems|"+options+"|To what category does the item belong?|radio|select = 0 VALUE = STRING"
 ))]
-[H: newPickedCategory = strformat(%{pickedCategory}%s, "Details")]
-[H: if(newPickedCategory == "Adventuring GearDetails", "GoodDetails", newPickedCategory)]
-[H: if(newPickedCategory == "Wondrous ItemDetails", "WondrousItemDetails", newPickedCategory)]
-[H: passedVars = json.set("{}", "pickedCategory", "newPickedCategory")]
+[H: typeOfItems = strformat('%{passedItems}%s', 'Details')]
+[H: if(typeOfItems == "Wondrous ItemDetails", "WondrousItemDetails", typeOfItems)]
+[H: passedVars = json.append("", passedItems, typeOfItems)]
 
+[H: "<!-- Ammo, Armor, Good, Potion, Ring, Rod, Scroll, Staff, Wand, Weapon, Wondrous Item -->"]
 [H, switch(passedItems), code:
-case "Adventuring Gear":{
-   [H, macro("Add Gear@Lib:Inventory"): passedVars]
+case "Ammo":{
+   [H, macro("Add Ammo@Lib:Inventory"): passedVars]
+   };
+case "Armor":{
+   [H, macro("Add Armor@Lib:Inventory"): passedVars]
+   };
+case "Good":{
+   [H, macro("Add Good@Lib:Inventory"): passedVars]
+   };
+case "Potion":{
+   [H, macro("Add Potion@Lib:Inventory"): passedVars]
+   };
+case "Ring":{
+   [H, macro("Add Ring@Lib:Inventory"): passedVars]
+   };
+case "Rod":{
+   [H, macro("Add Rod@Lib:Inventory"): passedVars]
+   };
+case "Scroll":{
+   [H, macro("Add Scroll@Lib:Inventory"): passedVars]
+   };
+case "Staff":{
+   [H, macro("Add Staff@Lib:Inventory"): passedVars]
+   };
+case "Wand":{
+   [H, macro("Add Wand@Lib:Inventory"): passedVars]
+   };
+case "Weapon":{
+   [H, macro("Add Weapon@Lib:Inventory"): passedVars]
    };
 case "Wondrous Item":{
    [H, macro("Add Wondrous Item@Lib:Inventory"): passedVars]
    };
 default:{
-   [H, macro("Add Good@Lib:Inventory"): passedVars]
+   [H, macro("Add Equipment@Lib:Inventory"): passedVars]
 }]
-
-!!
-@@ @Add Shield Manually
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=default ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: screen = input(
-	"junkvar|Do not add +1s or change the base stats|Enter values for the armor BEFORE any enhancemnts|Label",
-	"shname|Custom Shield|Name|TEXT|WIDTH = 40",
-	"shAC|1|Armor Value",
-	"shcheckpen|1|Enter the armor check penalty",
-	"shmaxdex|1|Enter the maximum dex bonus the armor allows",
-	"shfail|5|Enter the spell failure %",
-	"classnum|Buckler (Hand Free to Wield Weapons),Light (Hand Free to Hold/Gesture),Heavy (Hand Occupied by Shield)|Set shield class|radio|orient = h",
-	"Weight|20|Enter the weight of the armor at MEDIUM size"
-)]
-[H: abort(screen)]
-
-[H, if(classnum == 0): shweightclass = "Buckler"]
-[H, if(classnum == 1): shweightclass = "Light"]
-[H, if(classnum == 2): shweightclass = "Heavy"]
-
-[H: object = "Name = "+shname+"##Weight = "+Weight+"##Description = Shield##Qty = 1##Location = "+shname+"##LocPrior = 0##Cap = 0##WeightCount = 1##Class = Shield##Container = 0##useInfo = {}"]
-[H: object = json.fromStrProp(object,"##")]
-[H: useInfo = json.set("{}","Name",shname,"AC",shAC,"Check Penalty",shcheckpen,"MaxDex",shmaxdex,"Spell Fail",shfail,"Weight Class",shweightclass)]
-[H: object = json.set(object,"useInfo",useInfo)]
-
-[H: macro.return = object]
-
-!!
-@@ @Add Single Weapon Wrap
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=red ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: objectToAdd = macro.args]
-[H: itemToAdd = json.get(objectToAdd,"Name")]
-
-[H: wepenchants = "(None),Anarchic,Axiomatic,Bane,Brilliant Energy,Dancing,Defending,Disrupting,Distance,Flaming,Flaming Burst,Frost,Ghost Touch,Holy,Icy Burst,Keen,Ki Focus,Merciful,Mighty Cleaving,Returning,Seeking,Shock,Shocking Burst,Speed,Spell Storing,Thundering,Throwing,Unholy,Vicious,Vorpal,Wounding"]
-
-[H: screen1 = input(
-	"tab 1|"+itemToAdd+" Details||tab",
-	"miscABbonus|0|Enter Misc. AB Bonus (From Weapon Focus, Etc.)##miscdmgbonus|0|Enter Misc. Dmg. Bonus (From Weapon Spec., Etc.)##keen|0|Do You Have Improved Critical for this Weapon?|CHECK##nonprof|0|CHECK If You Are _NOT_ Proficient With This Weapon (-4 Penalty)|CHECK##wmaterial|(None),Adamantine,Darkwood,Cold Iron,Mithral,Silvered|Select Any Special Materials|RADIO|SELECT = 0 VALUE = STRING##wenhance|0,Masterwork,1,2,3,4,5|Select Enhancement Level|RADIO|SELECT = 0 VALUE = STRING##wench1|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench2|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench3|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench4|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench5|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench6|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench7|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench8|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING##wench9|"+wepenchants+"|Select Any Special Enchantments|LIST|SELECT = 0 VALUE = STRING"
-)]
-[H: abort(screen1)]
-
-[H: useInfo = json.get(objectToAdd,"useInfo")]
-
-[H, if(nonprof == 1): miscABbonus = miscABbonus-4]
-[H: moniker = ""]
-[H: enchantments = ""]
-[H, if(wenhance!= 0 && wenhance!= "Masterwork"): moniker = "+"+wenhance+" "]
-[H, if(wenhance == "Masterwork"): moniker = "Mwk "]
-[H, if(wench1!= "(None)"), code:{[moniker = moniker+" "+wench1][enchantments = listAppend(enchantments,wench1)]};{}]
-[H, if(wench2!= "(None)"), code:{[moniker = moniker+" "+wench2][enchantments = listAppend(enchantments,wench2)]};{}]
-[H, if(wench3!= "(None)"), code:{[moniker = moniker+" "+wench3][enchantments = listAppend(enchantments,wench3)]};{}]
-[H, if(wench4!= "(None)"), code:{[moniker = moniker+" "+wench4][enchantments = listAppend(enchantments,wench4)]};{}]
-[H, if(wench5!= "(None)"), code:{[moniker = moniker+" "+wench5][enchantments = listAppend(enchantments,wench5)]};{}]
-[H, if(wench6!= "(None)"), code:{[moniker = moniker+" "+wench6][enchantments = listAppend(enchantments,wench6)]};{}]
-[H, if(wench7!= "(None)"), code:{[moniker = moniker+" "+wench7][enchantments = listAppend(enchantments,wench7)]};{}]
-[H, if(wench8!= "(None)"), code:{[moniker = moniker+" "+wench8][enchantments = listAppend(enchantments,wench8)]};{}]
-[H, if(wench9!= "(None)"), code:{[moniker = moniker+" "+wench9][enchantments = listAppend(enchantments,wench9)]};{}]
-
-[H, if(wmaterial!= "(None)"): moniker = if(moniker == "",wmaterial+" ",moniker+" "+wmaterial+" ")]
-
-[H, if(wenhance == "Masterwork"), code:{
-	[wAB = miscABbonus+1)]
-	[dmgbonus = miscdmgbonus]
-};{
-	[wAB = miscABbonus+wenhance]
-	[dmgbonus = miscdmgbonus+wenhance]
-}]
-
-[H, if(wmaterial == "Silvered"): dmgbonus = dmgbonus-1]
-[H, if(wench1 == "Keen" || wench2 == "Keen" || wench3 == "Keen" ||wench4 == "Keen" ||wench5 == "Keen" ||wench6 == "Keen" ||wench7 == "Keen" ||wench8 == "Keen" ||wench9 == "Keen"): keen = 1; keen = keen]
-
-[H, if(wench1 == "Distance"||wench2 == "Distance"||wench3 == "Distance"||wench4 == "Distance"||wench5 == "Distance"||wench6 == "Distance"||wench7 == "Distance"||wench8 == "Distance"||wench9 == "Distance"||FarShot == 1): increment = (increment*2)]
-
-[H, if(wench1 == "Throwing"||wench2 == "Throwing"||wench3 == "Throwing"||wench4 == "Throwing"||wench5 == "Throwing"||wench6 == "Throwing"||wench7 == "Throwing"||wench8 == "Throwing"||wench9 == "Throwing"): useInfo = json.set(useInfo,"MeleeOnly",1,"Increment",10)]
-
-[H, if(keen == 1), code:{
-	[H: threat = json.get(useInfo,"Threat")]
-	[H: num = 21-threat]
-	[H: threat = 21-(2*num)]
-	[H: useInfo = json.set(useInfo,"Threat",threat)]
-};{}]
-
-[H: wdesig = moniker+" "+itemToAdd]
-[H: wdesig = trim(wdesig)]
-
-[H: description = json.get(objectToAdd,"Description")]
-[H, if(Size!= "Medium"): objectToAdd = json.set(objectToAdd,"Description",description+" {"+Size+"}")]
-
-[H: Weight = json.get(objectToAdd,"Weight")]
-[H, if(Size == "Small"), code:{
-	[dmgdie = json.get(useInfo,"SDie")]
-	[Weight = Weight/2]
-};{}]
-[H, if(Size == "Medium"): dmgdie = json.get(useInfo,"MDie")]
-[H, if(Size!= "Small" && Size!= "Medium"), code:{
-	[screen = input(
-	"junkvar|You have to help us out|We are missing some info|Label",
-	"dmgdie|1d8|Enter the correct damage dice",
-	"Weight|5|Enter the correct weight of the weapon"
-	)]
-	[abort(screen)]
-};{}]
-
-[H, if(itemToAdd == "Longbow (Composite)" || itemToAdd == "Shortbow (Composite)"), code:{
-	[screen = input(
-	"maxstr|0|Enter the strength bonus the bow allows"
-	)]
-	[abort(screen)]
-	[useInfo = json.set(useInfo,"MaxStr",maxstr)]
-};{}]
-
-[H: useInfo = json.set(useInfo,"Material",wmaterial,"Enhance",wenhance,"DmgBonus",dmgbonus,"AB",wAB,"Enchantments",enchantments,"Desig",wdesig,"Shortname",itemToAdd,"Moniker",moniker,"Die",dmgdie)]
-
-[H: objectToAdd = json.set(objectToAdd,"useInfo",useInfo,"Name",wdesig,"itemLocation",wdesig,"Weight",Weight)]
-
-[H: macro.return = objectToAdd]
-
-!!
-@@ @Add Special
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: goods = json.get(getLibProperty("ItemCategoryOptions","Lib:Inventory"),"Special")]
-
-[H: screen1 = input(
-	"itemToAdd|"+goods+",(Enter Manually)|Select the item to add|LIST|select = 0 VALUE = STRING",
-	"junkvar|---------|--OR--|Label",
-	"entermanually|0|CHECK here to enter an item not in the database|CHECK"
-)]
-[H: abort(screen1)]
-
-[H, if(entermanually == 1 || itemToAdd == "(Enter Manually)"), code:{
-	[macro("Add Goods Manually@Lib:Inventory"): ""]
-};{
-	[objectToAdd = json.get(getLibProperty("SpecialDetails","Lib:Inventory"),itemToAdd)]
-	[Items = json.append(Items,objectToAdd)]
-	[macro("Invent Main Starter@Lib:Inventory"): ""]
-}]
-
-!!
-@@ @Add Special Manually
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=default ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: screen = input(
-	"name|Name","Weight|1","cont|0","description|Text"
-)]
-[H: abort(screen)]
-
-[H: object = "Name = "+name+"##Weight = "+Weight+"##Description = "+description+"##Qty = 1##Location = "+name+"##LocPrior = 0##Cap = 0##WeightCount = 1##Class = Special##Container = "+cont+"##useInfo = {}"]
-[H: object = json.fromStrProp(object,"##")]
-
-[H: Items = json.append(Items,object)]
-[macro("Invent Main Starter@Lib:Inventory"): ""]
-
-!!
-@@ @Add Tools
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: goods = json.get(getLibProperty("ItemCategoryOptions","Lib:Inventory"),"Tools")]
-
-[H: screen1 = input(
-	"itemToAdd|"+goods+",(Enter Manually)|Select the item to add|LIST|select = 0 VALUE = STRING",
-	"junkvar|---------|--OR--|Label",
-	"entermanually|0|CHECK here to enter an item not in the database|CHECK"
-)]
-[H: abort(screen1)]
-
-[H, if(entermanually == 1 || itemToAdd == "(Enter Manually)"), code:{
-	[macro("Add Tools Manually@Lib:Inventory"): ""]
-};{
-	[objectToAdd = json.get(getLibProperty("ToolsDetails","Lib:Inventory"),itemToAdd)]
-	[Items = json.append(Items,objectToAdd)]
-	[macro("Invent Main Starter@Lib:Inventory"): ""]
-}]
-
-!!
-@@ @Add Tools Manually
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=default ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: screen = input(
-	"name|Name","Weight|1","cont|0","description|Text"
-)]
-[H: abort(screen)]
-
-[H: object = "Name = "+name+"##Weight = "+Weight+"##Description = "+description+"##Qty = 1##Location = "+name+"##LocPrior = 0##Cap = 0##WeightCount = 1##Class = Tools##Container = "+cont+"##useInfo = {}"]
-[H: object = json.fromStrProp(object,"##")]
-
-[H: Items = json.append(Items,object)]
-[macro("Invent Main Starter@Lib:Inventory"): ""]
-
-!!
-@@ @Add Wand
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=3 ; color=cyan ; playerEditable=false ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: screen = input(
-	"spellname|Cure Light Wounds|What spell does the wand contain?|TEXT|WIDTH = 50",
-	"charges|50|How many charges does it have?"
-)]
-[H: abort(screen)]
-
-[H: object = "Name = Wand: "+spellname+"##Weight = .1##Description = Short pointer imbued with magical powers##Qty = 1##Location = Wand: "+spellname+"##LocPrior = 0##Cap = 0##WeightCount = 1##Class = Wands##Container = 0##useInfo = {}"]
-[H: object = json.fromStrProp(object,"##")]
-[H: useInfo = json.set("{}","Charges",charges)]
-[H: object = json.set(object,"useInfo",useInfo)]
-
-[H: setProperty("Items", json.append(getProperty("Items"),object))]
-[macro("Invent Main Starter@Lib:Inventory"): ""]
-
-!!
-@@ @Add Weapon
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=cyan ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: goods = json.get(getLibProperty("ItemCategoryOptions","Lib:Inventory"),"Weapons")]
-
-[H: screen1 = input(
-	"itemToAdd|"+goods+",(Enter Manually - Weapon Isn't Listed)|Select the item to add|LIST|select = 0 VALUE = STRING",
-	"createcheck|0|Or, check here to create one|CHECK"
-)]
-[H: abort(screen1)]
-
-[H, if(itemToAdd == "(Enter Manually - Weapon Isn't Listed)" || createcheck == 1), code:{
-	[macro("Add Weapons Manually@Lib:Inventory"): ""]
-	[H: objectToAdd = macro.return]
-	[H: itemToAdd = json.get(objectToAdd,"Name")]
-	};{
-	[H: objectToAdd = json.get(getLibProperty("WeaponsDetails","Lib:Inventory"),itemToAdd)]
-}]
-
-[H: useInfo = json.get(objectToAdd,"useInfo")]
-[H: wield = json.get(useInfo,"Wield")]
-[H, if(wield == "D"), code:{
-	[macro("Add Double Weapon Wrap@Lib:Inventory"): objectToAdd]
-	[objectToAdd = macro.return]
-};{
-	[macro("Add Single Weapon Wrap@Lib:Inventory"): objectToAdd]
-	[objectToAdd = macro.return]
-}]
-
-[H: Items = json.append(Items,objectToAdd)]
-
-[macro("Invent Main Starter@Lib:Inventory"): ""]
-
-!!
-@@ @Add Weapon Manually
-@PROPS@ fontColor=black ; autoExecute=true ; fontSize=1.00em ; sortBy=2 ; color=default ; playerEditable=true ; applyToSelected=false ; group=2 Adding Items ; tooltip= ; minWidth=140
-[H: screen = input(
-	"name|Name|BASE name of the weapon type",
-	"Weight|1|How much does a medium version weigh?",
-	"sdie|1d6|Damage dice if weapon is small",
-	"mdie|1d8|Damage dice if weapon is medium",
-	"dmgtype|Bludgeoning,Piercing,Slashing,Bludgeoning or Piercing,Bludgeoning or Slashing,Piercing or Slashing,Bludgeoning and Piercing,Bludgeoning and Slashing,Piercing and Slashing|Select the damage type the weapon deals|LIST|VALUE = STRING",
-	"wield|1H,2H,V,D|How is the weapon wielded?|LIST|VALUE = STRING",
-	"finesse|0|CHECK if the weapon accomodate weapon finesse|CHECK",
-	"threat|20|Enter the base threat range",
-	"mult|2|Enter the base critical multiplier",
-	"ammopick|Self,Other|Indicate if it uses other items for ammo|radio|orient = h VALUE = STRING",
-	"rangedonly|0|CHECK if the weapon is ONLY used as a ranged weapon|CHECK",
-	"meleeonly|0|CHECK if the weapon is ONLY used as a melee weapon|CHECK",
-	"nostrpen|0|CHECK if strength penalties are ignored (e.g. for crossbows)|CHECK",
-	"increment|0|Enter the range increment",
-	"maxstr|999|Enter the maximum strengh bonus that can be applied to damage (999 if no limit)",
-	"description|Weapon - 1H Simple B|Enter text to display in inventory menu"
-)]
-[H: abort(screen)]
-
-[H: object = json.set("{}","Name",name,"Weight",Weight,"WeightCount",1,"Description",description,"Qty",1,"itemLocation",name,"itemLocationPrior",0,"Cap",0,"WeightCount",1,"Class","Weapons","Container",0)]
-
-[H: useInfo = json.set("{}","Desig",name,"SDie",sdie,"MDie",mdie,"DmgType",dmgtype,"Wield",wield,"Finesseable",finesse,"Threat",threat,"Mult",mult,"RangedOnly",rangedonly,"MeleeOnly",meleeonly,"NosStrPen",nostrpen,"Increment",increment,"MaxStr",maxstr,"Ammo",ammopick)]
-
-[H: object = json.set(object,"useInfo",useInfo)]
-
-[H: macro.return = object]
 
 !!
 @@ @Add Denom
