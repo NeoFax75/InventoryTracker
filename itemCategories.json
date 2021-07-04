@@ -1,1 +1,1 @@
-[{"Ammo","Armor","Good","Potion","Ring","Rod","Scroll","Staff","Wand","Weapon","Wondrous Item"}]
+[{"itemID":0,"itemName":"Ammo"},{"itemID":1,"itemName":"Armor"},{"itemID":2,"itemName":"Good"},{"itemID":3,"itemName":"Potion"},{"itemID":4,"itemName":"Ring"},{"itemID":5,"itemName":"Rod"},{"itemID":6,"itemName":"Scroll"},{"itemID":7,"itemName":"Staff"},{"itemID":8,"itemName":"Wand"},{"itemID":9,"itemName":"Weapon"},{"itemID":10,"itemName":"Wondrous Item"}]
